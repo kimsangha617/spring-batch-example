@@ -5,5 +5,8 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: root
       password: 1234
+  sql:
+    init:
+      data-locations: classpath:person.sql
 batch:
   initialize-schema: never # meta table이 자동 생성 되지 않도록 never로 설정

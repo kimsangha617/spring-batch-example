@@ -1,9 +1,9 @@
-create table person (
-    id bigint primary key auto_increment,
-    name varchar(255),
-    age varchar(255),
-    addr varchar(255)
-);
+-- create table person (
+--     id bigint primary key auto_increment,
+--     name varchar(255),
+--     age varchar(255),
+--     addr varchar(255)
+-- );
 
 insert into person (name, age, addr) values('크크크','32','인천');
 
