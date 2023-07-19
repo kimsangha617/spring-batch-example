@@ -1,11 +1,13 @@
 package fastcampus.spring.batch.part4;
 
+import fastcampus.spring.batch.part5.Orders;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -22,18 +24,25 @@ public class WKUser {
     @Enumerated(EnumType.STRING)
     private Level level = Level.NORMAL;
 
-    private int totalAmount;
-
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
+    private List<Orders> orders;
     private LocalDate updatedDate;
 
     @Builder
-    private WKUser(String username, int totalAmount) {
+    private WKUser(String username, List<Orders> orders) {
         this.username = username;
-        this.totalAmount = totalAmount;
+        this.orders = orders;
     }
 
     public boolean availableLevelUp() {
         return Level.availableLevelUp(this.getLevel(), this.getTotalAmount());
+    }
+
+    private int getTotalAmount() {
+        return this.orders.stream()
+                .mapToInt(Orders::getAmount)
+                .sum();
     }
 
     public Level levelUp(){
