@@ -11,7 +11,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Entity
-public class User {
+public class WKUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class User {
     private LocalDate updatedDate;
 
     @Builder
-    private User(String username, int totalAmount) {
+    private WKUser(String username, int totalAmount) {
         this.username = username;
         this.totalAmount = totalAmount;
     }
@@ -48,8 +48,8 @@ public class User {
     public enum Level{
         VIP(500_000, null),
         GOLD(500_000, VIP),
-        SILVER(300_00, GOLD),
-        NORMAL(200_00, SILVER);
+        SILVER(300_000, GOLD),
+        NORMAL(200_000, SILVER);
 
         private final int nextAmount;
         private final Level nextLevel;
@@ -81,7 +81,7 @@ public class User {
                 return SILVER.nextLevel;
             }
             if (totalAmount >= Level.NORMAL.nextAmount) {
-                return NORMAL;
+                return NORMAL.nextLevel;
             }
 
             return NORMAL;

@@ -17,7 +17,7 @@ public class SaveUserTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        List<User> users = createUsers();
+        List<WKUser> users = createUsers();
 
         Collections.shuffle(users);
 
@@ -26,36 +26,36 @@ public class SaveUserTasklet implements Tasklet {
         return RepeatStatus.FINISHED;
     }
 
-    private List<User> createUsers() {
-        List<User> users = new ArrayList<>();
+    private List<WKUser> createUsers() {
+        List<WKUser> users = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
-            users.add(User.builder()
+            users.add(WKUser.builder()
                             .totalAmount(1_000)
                             .username("test username" + i)
                     .build());
         }
 
         for (int i = 100; i < 200; i++) {
-            users.add(User.builder()
+            users.add(WKUser.builder()
                             .totalAmount(200_000)
                             .username("test username" + i)
                     .build());
         }
 
         for (int i = 200; i < 300; i++) {
-            users.add(User.builder()
+            users.add(WKUser.builder()
                     .totalAmount(300_000)
                     .username("test username" + i)
                     .build());
         }
 
         for (int i = 300; i < 400; i++) {
-            users.add(User.builder()
+            users.add(WKUser.builder()
                     .totalAmount(500_000)
                     .username("test username" + i)
                     .build());
         }
-        return null;
+        return users;
     }
 }

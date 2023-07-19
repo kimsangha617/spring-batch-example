@@ -28,10 +28,12 @@ public class UserConfiguration {
     private final EntityManagerFactory entityManagerFactory;
 
     @Bean
-    public Job userJob() {
+    public Job userJob() throws Exception {
         return this.jobBuilderFactory.get("userJob")
                 .incrementer(new RunIdIncrementer())
                 .start(this.saveUserStep())
+                .next(this.userLevelUpStep())
+                .listener(new LevelUpJobExecutionListener(userRepository))
                 .build();
     }
 
@@ -45,14 +47,14 @@ public class UserConfiguration {
     @Bean
     public Step userLevelUpStep() throws Exception {
         return this.stepBuilderFactory.get("userLevelUpStep")
-                .<User,User>chunk(100)
+                .<WKUser,WKUser>chunk(100)
                 .reader(itemReader())
                 .processor(itemProcessor())
                 .writer(itemWriter())
                 .build();
     }
 
-    private ItemWriter<? super User> itemWriter() {
+    private ItemWriter<? super WKUser> itemWriter() {
         return users -> {
           users.forEach(x -> {
               x.levelUp();
@@ -61,7 +63,7 @@ public class UserConfiguration {
         };
     }
 
-    private ItemProcessor<? super User,? extends User> itemProcessor() {
+    private ItemProcessor<? super WKUser,? extends WKUser> itemProcessor() {
         return user -> {
             if(user.availableLevelUp()) {
                 return user;
@@ -71,9 +73,9 @@ public class UserConfiguration {
         };
     }
 
-    private ItemReader<? extends User> itemReader() throws Exception {
-        JpaPagingItemReader<User> itemReader = new JpaPagingItemReaderBuilder<User>()
-                .queryString("select u from User u")
+    private ItemReader<? extends WKUser> itemReader() throws Exception {
+        JpaPagingItemReader<WKUser> itemReader = new JpaPagingItemReaderBuilder<WKUser>()
+                .queryString("select u from WKUser u")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(100)
                 .name("userItemReader")
